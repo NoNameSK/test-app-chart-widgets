@@ -2,12 +2,5 @@
     "extends": [
         "plugin:vue/recommended"
     ],
-    "rules": {
-        "vue/no-mutating-props": [
-            "error",
-            {
-                "shallowOnly": false
-            }
-        ]
-    }
+    "rules": {}
 }
