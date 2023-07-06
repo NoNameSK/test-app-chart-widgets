@@ -1,26 +1,79 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="h-screen flex flex-col">
+    <div class="p-4">
+      <div class="mb-4">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" v-model="startDate" @change="updateCharts" />
+      </div>
+      <div class="mb-4">
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" v-model="endDate" @change="updateCharts" />
+      </div>
+    </div>
+    <div class="flex-1 p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <Chart v-for="(chart, index) in charts" :key="index" :chart="chart" :index="index">
+      </Chart>
+      <div class="flex items-center justify-center">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          @click="openCreateChartModal">Add Chart</button>
+      </div>
+    </div>
+    <CreateChartModal v-if="isCreateChartModalOpen" :closeCreateChartModal="closeCreateChartModal" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CreateChartModal from './components/modals/CreateChartModal.vue'
+import Chart from './components/Chart.vue'
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    Chart,
+    CreateChartModal,
+  },
+  data() {
+    return {
+      startDate: new Date(2020, 0, 1).toISOString().substring(0,10),
+      endDate: new Date(Date.now() + 30*24*60*60*1000).toISOString().substring(0,10),
+      chartData: [],
+      isCreateChartModalOpen: false
+    }
+  },
+  computed: {
+    charts() {
+        return this.$store.getters.getFilteredCharts;
+    },
+  },
+  mounted() {
+    this.updateCharts()
+  },
+  methods: {
+    openCreateChartModal() {
+      this.isCreateChartModalOpen = true
+    },
+    closeCreateChartModal() {
+      console.log(this.$store.state.charts)
+      this.isCreateChartModalOpen = false
+    },
+    updateCharts() {
+        this.$store.dispatch('setDateRange', { start: new Date(this.startDate), end: new Date(this.endDate) });
+    }, 
+    addChart(chart) {
+      if (this.charts.length < 4) {
+        this.$store.dispatch('addChart', chart);
+    }},
+  },
+  watch: {
+    startDate: {
+      handler() {
+      },
+      immediate: true
+    },
+    endDate: {
+      handler() {
+      },
+      immediate: true
+    }
   }
 }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
