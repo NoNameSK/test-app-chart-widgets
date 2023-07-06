@@ -2,18 +2,19 @@
   <div class="h-screen flex flex-col">
     <div class="p-4 flex gap-10 justify-center">
       <div class="flex gap-12">
-        <div class="mb-4">
+        <div class="flex items-center">
           <label for="startDate">Start Date:</label>
           <input type="date" id="startDate" v-model="startDate" @change="updateCharts" />
         </div>
-        <div class="mb-4">
+        <div class="flex items-center">
           <label for="endDate">End Date:</label>
           <input type="date" id="endDate" v-model="endDate" @change="updateCharts" />
         </div>
-      </div>
-      <div class="flex items-center justify-center ml-auto">
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          @click="openCreateChartModal">Add Chart</button>
+        <div class="flex items-center justify-center ml-auto">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            :class="{ 'cursor-not-allowed': charts.length >= 4 }" :disabled="charts.length >= 4"
+            @click="openCreateChartModal">Add Chart</button>
+        </div>
       </div>
     </div>
     <div class="flex-1 p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
