@@ -31,7 +31,6 @@ export default new Vuex.Store({
                 id: 2,
                 name: "Humidity chart",
                 type: 'bar',
-                sensors: ['humidity'],
                 series: [{
                     color: '#ff00ff',
                     data: [
@@ -66,6 +65,17 @@ export default new Vuex.Store({
             state.dateRange.start = start;
             state.dateRange.end = end;
         },
+        mergeSeries(state, { currentChartId, mergedChartId }) {
+            const mergedChartSeries = state.charts.find(chart => chart.id === mergedChartId).series;
+
+            state.charts.find(chart => chart.id === currentChartId).series.push(...mergedChartSeries);
+        },
+        unmergeSeries(state, { currentChartId, unMergedChartId }) {
+            const unMergedSeries = state.charts.find(chart => chart.id === unMergedChartId).series;
+            const currentChartSeries = state.charts.find(chart => chart.id === currentChartId).series;
+
+            state.charts.find(chart => chart.id === currentChartId).series = currentChartSeries.filter(series => !unMergedSeries.includes(series));
+        }
     },
     actions: {
         addChart({ commit }, chart) {
@@ -83,6 +93,12 @@ export default new Vuex.Store({
         setDateRange({ commit }, dateRange) {
             commit('setDateRange', dateRange);
         },
+        mergeSeries({ commit }, { currentChartId, mergedChartId }) {
+            commit('mergeSeries', { currentChartId, mergedChartId });
+        },
+        unmergeSeries({ commit }, { currentChartId, unMergedChartId }) {
+            commit('unmergeSeries', { currentChartId, unMergedChartId });
+        },
     },
     getters: {
         getCharts(state) {
@@ -92,10 +108,10 @@ export default new Vuex.Store({
             if (!state.dateRange.start || !state.dateRange.end) {
                 return state.charts;
             }
-            
+
             const startTimestamp = state.dateRange.start.getTime();
             const endTimestamp = state.dateRange.end.getTime();
-            
+
             return state.charts.map(chart => ({
                 ...chart,
                 series: chart.series.map(serie => ({

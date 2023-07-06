@@ -1,5 +1,5 @@
 <template>
-    <div class="rounded-lg bg-white shadow-md p-4 relative">
+    <div class="rounded-lg bg-white shadow-md p-4 relative w-[400px] h-[700px]">
         <div class="flex items-center mb-2">
             <label for="chartType">Chart Type:</label>
             <select id="chartType" v-model="chartType">
@@ -7,25 +7,15 @@
                 <option value="bar">Bar</option>
             </select>
         </div>
-        <!-- <div class="flex items-center">
-            <label for="sensors">Sensors:</label>
-            <input type="checkbox" id="sensors" value="temperature" v-model="selectedSensors" @change="updateChart">
-            <label for="temperature">Temperature</label>
-            <input type="checkbox" id="sensors" value="humidity" v-model="selectedSensors" @change="updateChart">
-            <label for="humidity">Humidity</label>
-            <input type="checkbox" id="sensors" value="light" v-model="selectedSensors" @change="updateChart">
-            <label for="light">Light</label>
+        <div v-for="(mergeChart, index) in charts" :key="index">
+            <div class="flex items-center">
+                <label :for="'chart-' + mergeChart.id">{{ mergeChart.name }}</label>
+                <button v-if="!isMerged(mergeChart.id)" @click="mergeSeries(chart.id, mergeChart.id)">Merge</button>
+                <button v-if="isMerged(mergeChart.id)" @click="unmergeSeries(chart.id, mergeChart.id)">Unmerge</button>
+            </div>
         </div>
-        <div class="flex items-center">
-            <label for="sensors">Sensors:</label>
-            <select id="sensors" v-model="selectedSensors" multiple @change="updateChart">
-                <option value="temperature">Temperature</option>
-                <option value="humidity">Humidity</option>
-                <option value="light">Light</option>
-            </select>
-        </div> -->
         <highcharts :options="chartOptions"></highcharts>
-        <div v-for="(series, index) in selectedSensors" :key="index" class="flex items-center">
+        <div v-for="(series, index) in series" :key="index" class="flex items-center">
             <label :for="'color' + index">Color:</label>
             <input :id="'color' + index" type="color" v-model="series.color" />
         </div>
@@ -47,12 +37,30 @@ export default {
         }
     },
     name: 'ChartWidjet',
+    data() {
+        return {
+            selectedCharts: [],
+        }
+    },
     methods: {
         deleteChart(id) {
             this.$store.dispatch('deleteChart', id)
         },
         updateChart(index, updatedChart) {
             this.$store.dispatch('updateChart', { index, chart: updatedChart });
+        },
+        mergeSeries(currentChartId, mergedChartId) {
+            this.$store.dispatch('mergeSeries', { currentChartId, mergedChartId });
+        },
+        unmergeSeries(currentChartId, unMergedChartId) {
+            this.$store.dispatch('unmergeSeries', { currentChartId, unMergedChartId });
+        },
+        isMerged(unMergedChartId) {
+            const unMergedSeriesName = this.charts.find(chart => chart.id === unMergedChartId).series[0].name;
+
+            const currentChartSeries = this.chart.series;
+
+            return currentChartSeries.some(series => series.name === unMergedSeriesName);
         },
     },
     created() {
@@ -61,6 +69,9 @@ export default {
         }
     },
     computed: {
+        charts() {
+            return this.$store.getters.getCharts.filter(chart => chart.id !== this.chart.id);
+        },
         series: {
             get() {
                 return this.chart.series;
@@ -105,6 +116,6 @@ export default {
                 colors: this.chart.series.map(series => series.color)
             }
         },
-    }
+    },
 }
 </script>

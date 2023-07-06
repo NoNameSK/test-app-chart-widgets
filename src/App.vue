@@ -1,22 +1,23 @@
 <template>
   <div class="h-screen flex flex-col">
-    <div class="p-4">
-      <div class="mb-4">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" v-model="startDate" @change="updateCharts" />
+    <div class="p-4 flex gap-10 justify-center">
+      <div class="flex gap-12">
+        <div class="mb-4">
+          <label for="startDate">Start Date:</label>
+          <input type="date" id="startDate" v-model="startDate" @change="updateCharts" />
+        </div>
+        <div class="mb-4">
+          <label for="endDate">End Date:</label>
+          <input type="date" id="endDate" v-model="endDate" @change="updateCharts" />
+        </div>
       </div>
-      <div class="mb-4">
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" v-model="endDate" @change="updateCharts" />
-      </div>
-    </div>
-    <div class="flex-1 p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-      <Chart v-for="(chart, index) in charts" :key="index" :chart="chart" :index="index">
-      </Chart>
-      <div class="flex items-center justify-center">
+      <div class="flex items-center justify-center ml-auto">
         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           @click="openCreateChartModal">Add Chart</button>
       </div>
+    </div>
+    <div class="flex-1 p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
+      <Chart v-for="(chart, index) in charts" :key="index" :chart="chart" :index="index" />
     </div>
     <CreateChartModal v-if="isCreateChartModalOpen" :closeCreateChartModal="closeCreateChartModal" />
   </div>
@@ -33,15 +34,15 @@ export default {
   },
   data() {
     return {
-      startDate: new Date(2020, 0, 1).toISOString().substring(0,10),
-      endDate: new Date(Date.now() + 30*24*60*60*1000).toISOString().substring(0,10),
+      startDate: null,
+      endDate: null,
       chartData: [],
       isCreateChartModalOpen: false
     }
   },
   computed: {
     charts() {
-        return this.$store.getters.getFilteredCharts;
+      return this.$store.getters.getFilteredCharts;
     },
   },
   mounted() {
@@ -56,12 +57,15 @@ export default {
       this.isCreateChartModalOpen = false
     },
     updateCharts() {
+      if (this.startDate && this.endDate) {
         this.$store.dispatch('setDateRange', { start: new Date(this.startDate), end: new Date(this.endDate) });
-    }, 
+      }
+    },
     addChart(chart) {
       if (this.charts.length < 4) {
         this.$store.dispatch('addChart', chart);
-    }},
+      }
+    },
   },
   watch: {
     startDate: {
