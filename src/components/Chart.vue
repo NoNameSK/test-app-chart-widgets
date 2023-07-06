@@ -1,5 +1,5 @@
 <template>
-    <div class="rounded-lg bg-white shadow-md p-4 relative w-[400px] h-[700px]">
+    <div class="rounded-lg bg-white shadow-md p-4 relative w-[350px] h-[700px]">
         <div class="flex justify-center text-xl">{{chart.name }}</div>
         <div class="flex items-center my-2 gap-2 text-lg">
             <label for="chartType">Chart Type:</label>
