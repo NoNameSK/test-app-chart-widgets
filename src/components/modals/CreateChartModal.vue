@@ -5,7 +5,7 @@
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Static modal
+                        Create chart
                     </h3>
                     <button type="button" @click="closeCreateChartModal"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -20,24 +20,29 @@
                 </div>
                 <div class="p-6 space-y-6">
                     <input placeholder="Name of chart" v-model="chart.name"
-                        class="w-full px-4 py-2 text-base text-gray-700 placeholder-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-0 dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-400 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-0">
+                        class="w-full px-4 py-2 text-base text-gray-500 placeholder-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-0 dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-400 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-0">
                     <select v-model="chart.type"
-                        class="w-full px-4 py-2 text-base text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-0 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-0">
+                        class="w-full px-4 py-2 text-base text-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-0 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-0">
                         <option disabled value="">Please select a chart type</option>
                         <option value="line">Line</option>
                         <option value="bar">Bar</option>
                     </select>
                     <input placeholder="Name of sensor" type="text" v-model="sensorName"
-                        class="w-full px-4 py-2 text-base text-gray-700 placeholder-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-0 dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-400 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-0">
-                    <input type="color" v-model="chart.series[0].color"
-                        class="w-10 h-10 p-1 text-base text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-0 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-0">
+                        class="w-full px-4 py-2 text-base text-gray-500 placeholder-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-0 dark:bg-gray-800 dark:text-gray-300 dark:placeholder-gray-400 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-0">
+                    <div class="flex gap-2 items-center"><span class="text-gray-500">Choose color: </span><input
+                            type="color" v-model="chart.series[0].color"
+                            class="w-10 h-10 p-1 text-base text-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-0 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:focus:border-blue-400 dark:focus:ring-0">
+                    </div>
                 </div>
                 <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <button data-modal-hide="staticModal" type="button" @click="addChartToDashboard()"
-                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I
-                        accept</button>
+                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Create
+                    </button>
                     <button data-modal-hide="staticModal" type="button" @click="resetForm()"
-                        class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
+                        class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>
