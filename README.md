@@ -23,3 +23,6 @@ Dependencies:
 * [Vuex](https://vuex.vuejs.org/)
 * [uuid](https://www.npmjs.com/package/uuid)
 * [vue-rx](https://github.com/vuejs/vue-rx)
+
+
+[Deploy in github pages](https://nonamesk.github.io/test-app-chart-widgets/)
