@@ -10,15 +10,16 @@ npm install
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
+### Node version 16.18.0 and npm version 8.19.2
 
-### Lints and fixes files
-```
-npm run lint
-```
+Platform:
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+* [Vuejs 3](https://v3.vuejs.org/)
+* [Tailwind](https://tailwindcss.com/)
+
+Dependencies:
+
+* [highcharts-vue](https://github.com/highcharts/highcharts-vue)
+* [Vuex](https://vuex.vuejs.org/)
+* [uuid](https://www.npmjs.com/package/uuid)
+* [vue-rx](https://github.com/vuejs/vue-rx)
