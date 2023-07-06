@@ -3,11 +3,11 @@
     <div class="p-4 flex md:gap-10 justify-center">
       <div class="flex flex-col md:flex-row gap-6 md:gap-12">
         <div class="flex items-center gap-3 md:gap-4">
-          <label class="w-[74px]" for="startDate">Start Date:</label>
+          <label class="w-[78px]" for="startDate">Start Date:</label>
           <input type="date" id="startDate" v-model="startDate" @change="updateCharts" />
         </div>
         <div class="flex items-center gap-3 md:gap-4">
-          <label class="w-[74px]" for="endDate">End Date:</label>
+          <label class="w-[78px]" for="endDate">End Date:</label>
           <input type="date" id="endDate" v-model="endDate" @change="updateCharts" />
         </div>
         <div class="flex items-center justify-center md:ml-auto">
