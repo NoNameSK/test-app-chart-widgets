@@ -2,7 +2,7 @@
   <div class="h-screen flex flex-col">
     <div class="p-4 flex md:gap-10 justify-center">
       <div class="flex flex-col md:flex-row gap-6 md:gap-12 justify-between">
-        <div class="flex flex-col md:flex-row">
+        <div class="flex flex-col md:flex-row gap-6 md:gap-12">
           <div class="flex items-center gap-3 md:gap-4">
             <label class="w-[78px]" for="startDate">Start Date:</label>
             <input type="date" id="startDate" v-model="startDate" @change="updateCharts" />
