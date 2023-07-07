@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen flex flex-col gap-5">
-    <div class="p-4 flex md:gap-10 justify-center">
+    <div class="p-4 flex md:gap-10 justify-center shadow-xl">
       <div class="flex flex-col md:flex-row gap-6 md:gap-12 justify-between text-sm lg:text-md">
         <div class="flex flex-col md:flex-row gap-6 md:gap-12">
           <div class="flex items-center gap-3 md:gap-4">
