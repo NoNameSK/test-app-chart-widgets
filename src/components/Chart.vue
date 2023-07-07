@@ -1,32 +1,61 @@
 <template>
     <div class="rounded-lg bg-white shadow-2xl drop-shadow-xl p-4 relative w-[350px] md:w-[375px]">
-        <div class="flex justify-center text-xl">{{ chart.name }}</div>
-        <div class="flex items-center my-2 xl:my-4 gap-2 text-lg">
-            <label for="chartType">Select chart Type:</label>
-            <select id="chartType" v-model="chartType">
-                <option value="line">Line</option>
-                <option value="bar">Bar</option>
-            </select>
-        </div>
-        <div class="flex flex-col gap-2 mb-4">
-            <div class="text-xl">Chart to merge:</div>
-            <div v-for="(mergeChart, index) in charts" :key="index" class=" flex gap-6 mb-4">
-                <div class="flex items-center gap-8">
-                    <label :for="'chart-' + mergeChart.id" class="text-lg">{{ mergeChart.name }}</label>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded text-md"
-                        v-if="!isMerged(mergeChart.id)" @click="mergeSeries(chart.id, mergeChart.id)">Merge</button>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded"
-                        v-if="isMerged(mergeChart.id)" @click="unmergeSeries(chart.id, mergeChart.id)">Unmerge</button>
-                </div>
+        <div class="flex justify-center items-center mb-10">
+            <div class="text-xl text-center">{{ chart.name }}</div>
+            <div>
+                <button @click="dropdownOpen = !dropdownOpen" class="focus:outline-none absolute left-6 top-6">
+                    <transition name="icon-fade" mode="out-in">
+                        <svg v-if="dropdownOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" class="h-6 w-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                        <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                            class="h-6 w-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16">
+                            </path>
+                        </svg>
+                    </transition>
+                </button>
+                <transition name="slide-fade">
+                    <div v-if="dropdownOpen" class="absolute z-20 left-6 top-10 bg-[#f3f4f6] rounded-md shadow-xl p-4 mt-2"
+                        ref="dropdown">
+                        <div class="flex items-center gap-2 text-lg mb-4">
+                            <label for="chartType">Select chart Type:</label>
+                            <select id="chartType" v-model="chartType">
+                                <option value="line">Line</option>
+                                <option value="bar">Bar</option>
+                            </select>
+                        </div>
+                        <div class="text-xl">Choose Chart to merge</div>
+                        <ul class="">
+                            <li v-for="(mergeChart, index) in charts" :key="index" class="py-4">
+                                <div class="flex items-center justify-between gap-8">
+                                    <label :for="'chart-' + mergeChart.id" class="text-lg whitespace-nowrap">
+                                        {{ mergeChart.name }}
+                                    </label>
+                                    <button class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded ml-auto"
+                                        v-if="!isMerged(mergeChart.id)" @click="mergeSeries(chart.id, mergeChart.id)">
+                                        Merge
+                                    </button>
+                                    <button class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded"
+                                        v-if="isMerged(mergeChart.id)" @click="unmergeSeries(chart.id, mergeChart.id)">
+                                        Unmerge
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </transition>
             </div>
         </div>
-
         <highcharts :options="chartOptions"></highcharts>
         <div v-for="(series, index) in series" :key="index" class="flex items-center gap-4 text-lg">
             <label :for="'color' + index">Change <span class="font-bold">{{ series.name }}</span> color:</label>
             <input :id="'color' + index" type="color" v-model="series.color" />
         </div>
-        <button class="absolute top-0 right-0 m-2 p-1 rounded-full text-white" @click="deleteChart(chart.id)">
+        <button class="absolute top-2 right-0 m-2 p-1 rounded-full text-white" @click="deleteChart(chart.id)">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256"
                 width="30px" height="30px" fill-rule="nonzero">
                 <g fill="#f80000" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
@@ -59,10 +88,23 @@ export default {
     name: 'ChartWidjet',
     data() {
         return {
+            dropdownOpen: false,
             selectedCharts: [],
         }
     },
+    created() {
+        window.addEventListener('click', this.handleOutsideClick);
+    },
+    beforeDestroy() {
+        window.removeEventListener('click', this.handleOutsideClick);
+    },
     methods: {
+        handleOutsideClick(event) {
+            const dropdown = this.$refs.dropdown;
+            if (dropdown && !dropdown.contains(event.target)) {
+                this.dropdownOpen = false;
+            }
+        },
         deleteChart(id) {
             this.$store.dispatch('deleteChart', id)
         },
@@ -131,3 +173,29 @@ export default {
     },
 }
 </script>
+
+<style scoped>
+.icon-fade-enter-active,
+.icon-fade-leave-active {
+    transition: opacity .5s;
+}
+
+.icon-fade-enter,
+.icon-fade-leave-to {
+    opacity: 0;
+}
+
+.slide-fade-enter-active {
+    transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+    transition: all .3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+    transform: translateX(10px);
+    opacity: 0;
+}
+</style>
