@@ -12,16 +12,16 @@
             <input type="date" id="endDate" v-model="endDate" @change="updateCharts" />
           </div>
         </div>
-      </div>
-      <div class="flex items-center justify-end ">
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          :class="{ 'cursor-not-allowed': charts.length >= 4 }" :disabled="charts.length >= 4"
-          @click="openCreateChartModal">Add Chart</button>
+        <div class="flex items-center justify-center">
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            :class="{ 'cursor-not-allowed': charts.length >= 4 }" :disabled="charts.length >= 4"
+            @click="openCreateChartModal">Add Chart</button>
+        </div>
       </div>
     </div>
     <div>
       <transition-group name="chart" tag="div" mode="out-in"
-        class="flex-1 p-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        class="flex-1 p-4 place-items-center lg:place-items-start grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
         <Chart v-for="(chart, index) in charts" :key="chart.id" :chart="chart" :index="index" />
       </transition-group>
     </div>
