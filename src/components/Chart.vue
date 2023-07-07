@@ -94,14 +94,6 @@ export default {
                 this.updateChart(this.index, { ...this.chart, series: [...value] });
             }
         },
-        formattedColor() {
-            return (color) => {
-                if (color && !color.startsWith('#')) {
-                    return `#${color}`;
-                }
-                return color;
-            };
-        },
         chartType: {
             get() {
                 return this.chart.type;

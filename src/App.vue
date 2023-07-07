@@ -1,26 +1,33 @@
 <template>
   <div class="h-screen flex flex-col">
     <div class="p-4 flex md:gap-10 justify-center">
-      <div class="flex flex-col md:flex-row gap-6 md:gap-12">
-        <div class="flex items-center gap-3 md:gap-4">
-          <label class="w-[78px]" for="startDate">Start Date:</label>
-          <input type="date" id="startDate" v-model="startDate" @change="updateCharts" />
-        </div>
-        <div class="flex items-center gap-3 md:gap-4">
-          <label class="w-[78px]" for="endDate">End Date:</label>
-          <input type="date" id="endDate" v-model="endDate" @change="updateCharts" />
-        </div>
-        <div class="flex items-center justify-center md:ml-auto">
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            :class="{ 'cursor-not-allowed': charts.length >= 4 }" :disabled="charts.length >= 4"
-            @click="openCreateChartModal">Add Chart</button>
+      <div class="flex flex-col md:flex-row gap-6 md:gap-12 justify-between">
+        <div class="flex">
+          <div class="flex items-center gap-3 md:gap-4">
+            <label class="w-[78px]" for="startDate">Start Date:</label>
+            <input type="date" id="startDate" v-model="startDate" @change="updateCharts" />
+          </div>
+          <div class="flex items-center gap-3 md:gap-4">
+            <label class="w-[78px]" for="endDate">End Date:</label>
+            <input type="date" id="endDate" v-model="endDate" @change="updateCharts" />
+          </div>
         </div>
       </div>
+      <div class="flex items-center justify-end ">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          :class="{ 'cursor-not-allowed': charts.length >= 4 }" :disabled="charts.length >= 4"
+          @click="openCreateChartModal">Add Chart</button>
+      </div>
     </div>
-    <div class="flex-1 p-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <Chart v-for="(chart, index) in charts" :key="index" :chart="chart" :index="index" />
+    <div>
+      <transition-group name="chart" tag="div" mode="out-in"
+        class="flex-1 p-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <Chart v-for="(chart, index) in charts" :key="chart.id" :chart="chart" :index="index" />
+      </transition-group>
     </div>
-    <CreateChartModal v-if="isCreateChartModalOpen" :closeCreateChartModal="closeCreateChartModal" />
+    <transition name="modal" @enter="onModalEnter" @leave="onModalLeave">
+      <CreateChartModal v-if="isCreateChartModalOpen" :closeCreateChartModal="closeCreateChartModal" />
+    </transition>
   </div>
 </template>
 
@@ -37,7 +44,6 @@ export default {
     return {
       startDate: null,
       endDate: null,
-      chartData: [],
       isCreateChartModalOpen: false
     }
   },
@@ -68,17 +74,54 @@ export default {
       }
     },
   },
-  watch: {
-    startDate: {
-      handler() {
-      },
-      immediate: true
-    },
-    endDate: {
-      handler() {
-      },
-      immediate: true
-    }
-  }
 }
 </script>
+
+<style>
+.modal-enter-active {
+  animation: modal-enter 0.5s ease-in-out;
+}
+
+.modal-leave-active {
+  animation: modal-leave 0.5s ease-in-out;
+}
+
+@keyframes modal-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modal-leave {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.chart-enter-active,
+.chart-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.chart-enter {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.chart-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+</style>
