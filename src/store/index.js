@@ -1,4 +1,5 @@
 import Vuex from 'vuex'
+import { v4 as uuidv4 } from 'uuid';
 
 export function randomDate(start = new Date(2020, 0, 1), end = new Date()) {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
@@ -20,6 +21,7 @@ export default new Vuex.Store({
                 name: "Temperature chart",
                 type: 'line',
                 series: [{
+                    id: uuidv4(),
                     color: '#ff0000',
                     data: [
                         ...Array.from({ length: 30 }, () => ({ y: randomData(), x: randomDate() }))
@@ -32,6 +34,7 @@ export default new Vuex.Store({
                 name: "Humidity chart",
                 type: 'bar',
                 series: [{
+                    id: uuidv4(),
                     color: '#ff00ff',
                     data: [
                         ...Array.from({ length: 30 }, () => ({ y: randomData(), x: randomDate() }))
@@ -73,8 +76,9 @@ export default new Vuex.Store({
         unmergeSeries(state, { currentChartId, unMergedChartId }) {
             const unMergedSeries = state.charts.find(chart => chart.id === unMergedChartId).series;
             const currentChartSeries = state.charts.find(chart => chart.id === currentChartId).series;
+            console.log(unMergedSeries)
 
-            state.charts.find(chart => chart.id === currentChartId).series = currentChartSeries.filter(series => !unMergedSeries.includes(series));
+            state.charts.find(chart => chart.id === currentChartId).series = currentChartSeries.filter(series => series.id !== unMergedSeries[0].id);
         }
     },
     actions: {

@@ -1,7 +1,7 @@
 <template>
   <div class="h-screen flex flex-col">
     <div class="p-4 flex md:gap-10 justify-center">
-      <div class="flex flex-col md:flex-row gap-6 md:gap-12 justify-between">
+      <div class="flex flex-col md:flex-row gap-6 md:gap-12 justify-between text-sm lg:text-md">
         <div class="flex flex-col md:flex-row gap-6 md:gap-12">
           <div class="flex items-center gap-3 md:gap-4">
             <label class="w-[78px]" for="startDate">Start Date:</label>
@@ -12,6 +12,8 @@
             <input type="date" id="endDate" v-model="endDate" @change="updateCharts" />
           </div>
         </div>
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" @click="resetDate()">Reset
+          date</button>
         <div class="flex items-center justify-center">
           <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             :class="{ 'cursor-not-allowed': charts.length >= 4 }" :disabled="charts.length >= 4"
@@ -20,9 +22,11 @@
       </div>
     </div>
     <div>
-      <transition-group name="chart" tag="div" mode="out-in"
-        class="flex-1 p-4 place-items-center lg:place-items-start grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
-        <Chart v-for="(chart, index) in charts" :key="chart.id" :chart="chart" :index="index" />
+      <transition-group name="chart" tag="div" mode="out-in" :class="[`xl:grid-cols-${charts.length >= 3 ? 3 : charts.length } 2xl:grid-cols-${charts.length}`]"
+        class="flex-1 p-2 md:p-4 place-items-center lg:place-items-start grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-10">
+        <div v-for="(chart, index) in charts" :key="chart.id" class="mx-auto">
+          <Chart :chart="chart" :index="index" />
+        </div>
       </transition-group>
     </div>
     <transition name="modal" @enter="onModalEnter" @leave="onModalLeave">
@@ -56,6 +60,12 @@ export default {
     this.updateCharts()
   },
   methods: {
+    resetDate() {
+      this.startDate = null;
+      this.endDate = null;
+      this.$store.dispatch('setDateRange', { start: null, end: null });
+
+    },
     openCreateChartModal() {
       this.isCreateChartModalOpen = true
     },

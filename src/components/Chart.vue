@@ -1,23 +1,29 @@
 <template>
-    <div class="rounded-lg bg-white shadow-lg drop-shadow-xl p-4 relative w-[350px] h-[700px]">
-        <div class="flex justify-center text-xl">{{chart.name }}</div>
-        <div class="flex items-center my-2 gap-2 text-lg">
-            <label for="chartType">Chart Type:</label>
+    <div class="rounded-lg bg-white shadow-lg drop-shadow-xl p-4 relative w-[350px] md:w-[360px] xl:w-[390px]">
+        <div class="flex justify-center text-xl">{{ chart.name }}</div>
+        <div class="flex items-center my-2 xl:my-4 gap-2 text-lg">
+            <label for="chartType">Select chart Type:</label>
             <select id="chartType" v-model="chartType">
                 <option value="line">Line</option>
                 <option value="bar">Bar</option>
             </select>
         </div>
-        <div v-for="(mergeChart, index) in charts" :key="index" class="text-lg flex gap-6 mb-4">
-            <div class="flex items-center gap-8">
-                <label :for="'chart-' + mergeChart.id">{{ mergeChart.name }}</label>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded" v-if="!isMerged(mergeChart.id)" @click="mergeSeries(chart.id, mergeChart.id)">Merge</button>
-                <button class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded" v-if="isMerged(mergeChart.id)" @click="unmergeSeries(chart.id, mergeChart.id)">Unmerge</button>
+        <div class="flex flex-col gap-2 mb-4">
+            <div class="text-xl">Chart to merge:</div>
+            <div v-for="(mergeChart, index) in charts" :key="index" class=" flex gap-6 mb-4">
+                <div class="flex items-center gap-8">
+                    <label :for="'chart-' + mergeChart.id" class="text-lg">{{ mergeChart.name }}</label>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded text-md"
+                        v-if="!isMerged(mergeChart.id)" @click="mergeSeries(chart.id, mergeChart.id)">Merge</button>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded"
+                        v-if="isMerged(mergeChart.id)" @click="unmergeSeries(chart.id, mergeChart.id)">Unmerge</button>
+                </div>
             </div>
         </div>
+
         <highcharts :options="chartOptions"></highcharts>
-        <div v-for="(series, index) in series" :key="index" class="flex items-center gap-4 text-xl">
-            <label :for="'color' + index">Change <span class="font-bold">{{series.name}}</span> color:</label>
+        <div v-for="(series, index) in series" :key="index" class="flex items-center gap-4 text-lg">
+            <label :for="'color' + index">Change <span class="font-bold">{{ series.name }}</span> color:</label>
             <input :id="'color' + index" type="color" v-model="series.color" />
         </div>
         <button class="absolute top-0 right-0 m-2 p-1 rounded-full text-white" @click="deleteChart(chart.id)">
@@ -70,11 +76,11 @@ export default {
             this.$store.dispatch('unmergeSeries', { currentChartId, unMergedChartId });
         },
         isMerged(unMergedChartId) {
-            const unMergedSeriesName = this.charts.find(chart => chart.id === unMergedChartId).series[0].name;
+            const unMergedSeriesId = this.charts.find(chart => chart.id === unMergedChartId).series[0].id;
 
             const currentChartSeries = this.chart.series;
 
-            return currentChartSeries.some(series => series.name === unMergedSeriesName);
+            return currentChartSeries.some(series => series.id === unMergedSeriesId);
         },
     },
     created() {

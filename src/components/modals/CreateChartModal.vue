@@ -82,6 +82,7 @@ export default {
         addChartToDashboard() {
             this.chart.id = uuidv4();
             this.chart.series[0].name = this.sensorName;
+            this.chart.series[0].id = uuidv4();
 
             console.log(this.chart)
 
@@ -96,6 +97,7 @@ export default {
                 series: [{
                     color: '#000000',
                     name: '',
+                    id: 0,
                     data: [...Array.from({ length: 30 }, () => ({ y: randomData(), x: randomDate() }))]
                 }],
             };
