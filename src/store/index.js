@@ -73,6 +73,14 @@ export default new Vuex.Store({
 
             state.charts.find(chart => chart.id === currentChartId).series.push(...mergedChartSeries);
         },
+        mergeSeries(state, { currentChartId, mergedChartId }) {
+            const mergedChartSeries = state.charts.find(chart => chart.id === mergedChartId).series;
+            const currentChartSeries = state.charts.find(chart => chart.id === currentChartId).series;
+        
+            const uniqueSeries = mergedChartSeries.filter(series => !currentChartSeries.includes(series));
+
+            state.charts.find(chart => chart.id === currentChartId).series.push(...uniqueSeries);
+        },
         unmergeSeries(state, { currentChartId, unMergedChartId }) {
             const unMergedSeries = state.charts.find(chart => chart.id === unMergedChartId).series;
             const currentChartSeries = state.charts.find(chart => chart.id === currentChartId).series;

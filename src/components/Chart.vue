@@ -20,7 +20,7 @@
                 </button>
                 <transition name="slide-fade">
                     <div v-if="dropdownOpen" class="absolute z-20 left-6 top-10 bg-[#f3f4f6] rounded-md shadow-xl p-4 mt-2"
-                        ref="dropdown">
+                        ref="dropdown" v-click-outside="closeDropdown">
                         <div class="flex items-center gap-2 text-lg mb-4">
                             <label for="chartType">Select chart Type:</label>
                             <select id="chartType" v-model="chartType">
@@ -51,9 +51,11 @@
             </div>
         </div>
         <highcharts :options="chartOptions"></highcharts>
-        <div v-for="(series, index) in series" :key="index" class="flex items-center gap-4 text-lg">
-            <label :for="'color' + index">Change <span class="font-bold">{{ series.name }}</span> color:</label>
-            <input :id="'color' + index" type="color" v-model="series.color" />
+        <div class="mt-4">
+            <div v-for="(series, index) in series" :key="index" class="flex items-center gap-4 text-lg">
+                <label :for="'color' + index">Change <span class="font-bold">{{ series.name }}</span> color:</label>
+                <input :id="'color' + index" type="color" v-model="series.color" />
+            </div>
         </div>
         <button class="absolute top-2 right-0 m-2 p-1 rounded-full text-white" @click="deleteChart(chart.id)">
             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0,0,256,256"
@@ -74,7 +76,12 @@
 </template>
   
 <script>
+import vClickOutside from 'v-click-outside'
+
 export default {
+    directives: {
+        clickOutside: vClickOutside.directive
+    },
     props: {
         chart: {
             type: Object,
@@ -104,6 +111,9 @@ export default {
             if (dropdown && !dropdown.contains(event.target)) {
                 this.dropdownOpen = false;
             }
+        },
+        closeDropdown() {
+            this.dropdownOpen = false;
         },
         deleteChart(id) {
             this.$store.dispatch('deleteChart', id)
