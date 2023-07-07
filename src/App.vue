@@ -71,7 +71,6 @@ export default {
       this.isCreateChartModalOpen = true
     },
     closeCreateChartModal() {
-      console.log(this.$store.state.charts)
       this.isCreateChartModalOpen = false
     },
     updateCharts() {

@@ -3,7 +3,7 @@
         <div class="flex justify-center items-center mb-10">
             <div class="text-xl text-center">{{ chart.name }}</div>
             <div>
-                <button @click="dropdownOpen = !dropdownOpen" class="focus:outline-none absolute left-6 top-6">
+                <button @click.stop="openDropdown" class="focus:outline-none absolute left-6 top-6">
                     <transition name="icon-fade" mode="out-in">
                         <svg v-if="dropdownOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" class="h-6 w-6">
@@ -19,8 +19,8 @@
                     </transition>
                 </button>
                 <transition name="slide-fade">
-                    <div v-if="dropdownOpen" class="absolute z-20 left-6 top-10 bg-[#f3f4f6] rounded-md shadow-xl p-4 mt-2"
-                        ref="dropdown" v-click-outside="closeDropdown">
+                    <div v-if="dropdownOpen" ref="dropDownMenu"
+                        class="absolute z-20 left-6 top-10 bg-[#f3f4f6] rounded-md shadow-xl p-4 mt-2">
                         <div class="flex items-center gap-2 text-lg mb-4">
                             <label for="chartType">Select chart Type:</label>
                             <select id="chartType" v-model="chartType">
@@ -28,11 +28,11 @@
                                 <option value="bar">Bar</option>
                             </select>
                         </div>
-                        <div class="text-xl">Choose Chart to merge</div>
+                        <div class="text-lg">Choose Chart to merge</div>
                         <ul class="">
                             <li v-for="(mergeChart, index) in charts" :key="index" class="py-4">
                                 <div class="flex items-center justify-between gap-8">
-                                    <label :for="'chart-' + mergeChart.id" class="text-lg whitespace-nowrap">
+                                    <label :for="'chart-' + mergeChart.id" class="text-md whitespace-nowrap">
                                         {{ mergeChart.name }}
                                     </label>
                                     <button class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded ml-auto"
@@ -76,12 +76,10 @@
 </template>
   
 <script>
-import vClickOutside from 'v-click-outside'
+import { ref } from 'vue'
+import { onClickOutside } from '@vueuse/core'
 
 export default {
-    directives: {
-        clickOutside: vClickOutside.directive
-    },
     props: {
         chart: {
             type: Object,
@@ -93,27 +91,26 @@ export default {
         }
     },
     name: 'ChartWidjet',
+    setup() {
+        const dropDownMenu = ref(null)
+        const dropdownOpen = ref(false)
+
+        const closeDropdown = () => {
+            dropdownOpen.value = false
+        }
+
+        onClickOutside(dropDownMenu, (event) => closeDropdown())
+
+        return { dropDownMenu, dropdownOpen, closeDropdown }
+    },
     data() {
         return {
-            dropdownOpen: false,
             selectedCharts: [],
         }
     },
-    created() {
-        window.addEventListener('click', this.handleOutsideClick);
-    },
-    beforeDestroy() {
-        window.removeEventListener('click', this.handleOutsideClick);
-    },
     methods: {
-        handleOutsideClick(event) {
-            const dropdown = this.$refs.dropdown;
-            if (dropdown && !dropdown.contains(event.target)) {
-                this.dropdownOpen = false;
-            }
-        },
-        closeDropdown() {
-            this.dropdownOpen = false;
+        openDropdown() {
+            this.dropdownOpen = true
         },
         deleteChart(id) {
             this.$store.dispatch('deleteChart', id)
