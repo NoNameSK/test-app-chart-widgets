@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col">
+  <div class="h-screen flex flex-col gap-5">
     <div class="p-4 flex md:gap-10 justify-center">
       <div class="flex flex-col md:flex-row gap-6 md:gap-12 justify-between text-sm lg:text-md">
         <div class="flex flex-col md:flex-row gap-6 md:gap-12">
@@ -22,9 +22,10 @@
       </div>
     </div>
     <div>
-      <transition-group name="chart" tag="div" mode="out-in" :class="[`xl:grid-cols-${charts.length >= 3 ? 3 : charts.length } 2xl:grid-cols-${charts.length}`]"
-        class="flex-1 p-2 md:p-4 place-items-center lg:place-items-start grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-10">
-        <div v-for="(chart, index) in charts" :key="chart.id" class="mx-auto">
+      <transition-group name="chart" tag="div" mode="out-in"
+        :class="[`flex flex-col flex-wrap md:flex-row gap-6 md:gap-12 justify-center`]"
+        class="p-2 md:p-4 place-items-center lg:place-items-start md:gap-10">
+        <div v-for="(chart, index) in charts" :key="chart.id">
           <Chart :chart="chart" :index="index" />
         </div>
       </transition-group>
