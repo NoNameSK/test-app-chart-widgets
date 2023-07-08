@@ -3,14 +3,14 @@
         <div class="flex justify-center items-center mb-10">
             <div class="text-xl text-center">{{ chart.name }}</div>
             <div>
-                <button @click.stop="openDropdown" class="focus:outline-none absolute left-6 top-6">
+                <button  class="focus:outline-none absolute left-6 top-6">
                     <transition name="icon-fade" mode="out-in">
-                        <svg v-if="dropdownOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        <svg v-if="dropdownOpen" @click.stop="closeDropdown" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor" class="h-6 w-6">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
                             </path>
                         </svg>
-                        <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        <svg v-else @click.stop="openDropdown" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                             class="h-6 w-6">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M4 6h16M4 12h16M4 18h16">
@@ -28,7 +28,7 @@
                                 <option value="bar">Bar</option>
                             </select>
                         </div>
-                        <div class="text-lg">Choose Chart to merge</div>
+                        <div class="text-lg" v-if="charts.length > 0">Choose Chart to merge</div>
                         <ul class="">
                             <li v-for="(mergeChart, index) in charts" :key="index" class="py-4">
                                 <div class="flex items-center justify-between gap-8">
